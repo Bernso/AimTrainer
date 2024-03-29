@@ -136,7 +136,7 @@ def cheat(event):
     global CHECKUP1, CHECKDOWN1, CHECKRIGHT1, CHECKLEFT1, SCORE
     summary = CHECKUP1 + CHECKDOWN1 + CHECKRIGHT1 + CHECKLEFT1
     if summary >= 8:
-        SCORE = random.randint(100000, 2000000)
+        SCORE += random.randint(100000, 2000000)
 
 
 def change_button():
