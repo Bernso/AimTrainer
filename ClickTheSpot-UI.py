@@ -119,24 +119,70 @@ def feedback():
 
 def check1(event):
     global CHECKUP1
-    CHECKUP1 += 1
+    if CHECKUP1 >= 2:
+        print("You have already activated this section of the cheat code.")
+        pass
+    else:
+        CHECKUP1 += 1
+        if CHECKUP1 == 1:
+            print("[1/2]")
+        elif CHECKUP1 == 2:
+            print("[2/2]")
+        else:
+            pass
+
+        
+        
 def check2(event):
     global CHECKDOWN1
-    CHECKDOWN1 += 1
+    if CHECKDOWN1 >= 2:
+        print("You have already activated this section of the cheat code.")
+        pass
+    else:
+        CHECKDOWN1 += 1
+        if CHECKDOWN1 == 1:
+            print("[1/2]")
+        elif CHECKDOWN1 == 2:
+            print("[2/2]")
+        else:
+            pass
+    
 
 def check3(event):
     global CHECKRIGHT1
-    CHECKRIGHT1 += 1
-
+    if CHECKRIGHT1 >= 2:
+        print("You have already activated this section of the cheat code.")
+        pass
+    else:
+        CHECKRIGHT1 += 1
+        if CHECKRIGHT1 == 1:
+            print("[1/2]")
+        elif CHECKRIGHT1 == 2:
+            print("[2/2]")
+        else:
+            pass
+        
 def check4(event):
     global CHECKLEFT1
-    CHECKLEFT1 += 1
+    if CHECKLEFT1 >= 2:
+        print("You have already activated this section of the cheat code.")
+        pass
+    else:
+        CHECKLEFT1 += 1
+        if CHECKLEFT1 == 1:
+            print("[1/2]")
+        elif CHECKLEFT1 == 2:
+            print("[2/2]")
+        else:
+            pass
 
 def cheat(event):
     global CHECKUP1, CHECKDOWN1, CHECKRIGHT1, CHECKLEFT1, SCORE
     summary = CHECKUP1 + CHECKDOWN1 + CHECKRIGHT1 + CHECKLEFT1
     if summary >= 8:
-        SCORE += random.randint(100000, 2000000)
+        SCORE += random.randint(10, 200000000000000000000000)
+        print(f"Your score is now: {SCORE}")
+        
 
 
 def change_button():
@@ -202,6 +248,8 @@ def quitv2(SCORE):
             print(f"\nYou scored ONE SINGULAR POINT!\n")
         elif SCORE <= 0:
             print("\nBros aim is terrible 💀")
+        elif SCORE >= 10000:
+            print(f"\nBro found the cheat code")
         else: 
             print(f"\nYou scored: {SCORE+1} points")
         
