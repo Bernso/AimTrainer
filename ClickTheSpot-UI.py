@@ -6,17 +6,21 @@ try:
     import urllib.request
     import time
     import requests
+    import sqlite3
+    import uuid
+    import sys
 except ImportError:
     print("Please make sure all required libraries are installed.")
     print("For further support please join the discord server: https://discord.gg/E6gkFRMGn2")
     input()
     quit()
 
-a = random.randint(12, 30)
-for o in range(1, a):
-    os.system("cls")
-    print(f"[{o} / {a-1}]")
-print("Completed main loading...\nSubloading...\n")
+#a = random.randint(12, 30)
+#print("Starting main loading...\n")
+#for o in range(1, a):
+#    os.system("cls")
+#    print(f"[{o} / {a-1}]")
+#print("Completed main loading...\nSubloading...\n")
 
 times_ran = 0
 SCORE = 0
@@ -25,9 +29,9 @@ CHECKDOWN1 = 0
 CHECKRIGHT1 = 0
 CHECKLEFT1 = 0
 
-DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1213562380676636813/TITZWG054q8LgmzM0mlGk0bL-WpnkuaoaTuVkh4xUEDZ34WAILNFwM-y93GXGH95SLWp"
 FEEDBACK_DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1221533046746906705/UmI-FXnuaaGNppGfmYdA7fDeHMN2KUekp43K2vR1dGa6TJ7MDBVAJPpFmyd3QMMHLW9b"
 ERROR_DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1221543200746111136/EJij3VCrHVxqwq-bSGwgSnWc8_oXNNP3tcFXcRHDzI62LHSZP5NviUDNv2txY63w-UnL"
+CHEATING_DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1223226845097627698/y1su_IsgTtxzsSYDKm8rPnlev4IhVlTZC_p1DsC8ls8YzDcdR4BOVJs753Hy7-FEiyJS"
 # This will default to be sent to my webhooks, if anyone uses it for anything that is not this it will be deleted
 
 def errorReporting(error):
@@ -36,13 +40,42 @@ def errorReporting(error):
             "content": f"**Error from a user:** (Aim Trainer) ||<@712946563508469832>||\n```{error}```"
         }
         requests.post(ERROR_DISCORD_WEBHOOK_URL, json=payload)
-    
+
         # Log Discord webhook message
         print(f"Error reported, and will be handled with shortly.")
         print()
     except Exception as e:
-        print("Message failed to send, please report this. https://discord.gg/HAg9FT88sc (this link will never expire)")
+        print("Message failed to send, please report this. https://discord.gg/E6gkFRMGn2 (this link will never expire)")
         print(f"Error: {e}")
+        errorReporting(e)
+        input()
+def startup(msg):
+    try:
+        payload = {
+            "content": f"**{msg}** started the application."
+        }
+        requests.post(FEEDBACK_DISCORD_WEBHOOK_URL, json=payload)
+        print("Discord webhook message sent.")
+    except Exception as e:
+        print("Message failed to send, please report this. https://discord.gg/E6gkFRMGn2 (this link will never expire)")
+        print(f"Error: {e}")
+        errorReporting(e)
+        input()
+
+def cheatingReporting(message):
+    try:
+        payload = {
+            "content": f"**Cheater found:** (Aim Trainer) \n```{message}```"
+        }
+        requests.post(CHEATING_DISCORD_WEBHOOK_URL, json=payload)
+
+        # Log Discord webhook message
+        print(f"You found the cheat code, you are being reported.")
+        print()
+    except Exception as e:
+        print("Message failed to send, please report this. https://discord.gg/E6gkFRMGn2 (this link will never expire)")
+        print(f"Error: {e}")
+        errorReporting(e)
         input()
 
 def sendFeedback(message):
@@ -51,12 +84,13 @@ def sendFeedback(message):
             "content": f"**New feedback:** (Aim Trainer) ||<@712946563508469832>||\n```{message}```"
         }
         requests.post(FEEDBACK_DISCORD_WEBHOOK_URL, json=payload)
-    
+
         # Log Discord webhook message
         print(f"Feedback sent.")
     except Exception as e:
-        print("Message failed to send, please report this. https://discord.gg/HAg9FT88sc (this link will never expire)")
+        print("Message failed to send, please report this. https://discord.gg/E6gkFRMGn2 (this link will never expire)")
         print(f"Error: {e}")
+        errorReporting(e)
 
 Icon = "AimTrainer-Icon"
 try:
@@ -68,6 +102,7 @@ try:
         print("'AimTrainer-Icon' folder created")
 except Exception as e:
     print(f"Error: {e}")
+    errorReporting(e)
     input()
 
 logs = "AimTrainer-logs"
@@ -80,23 +115,122 @@ try:
         print("'AimTrainer-logs' folder created")
 except Exception as e:
     print(f"Error: {e}")
+    errorReporting(e)
     input()
+
+db = "Database"
+try:
+    if os.path.exists(db):
+        print("'Database' folder already exists")
+    else:
+        print("Creating 'Database' folder")
+        os.makedirs(db)
+        print("'Database' folder created")
+except Exception as e:
+    print(f"Error: {e}")
+    errorReporting(e)
+    input()
+
+def get_user_ip():
+    try:
+        response = requests.get('https://api.ipify.org?format=json')
+        if response.status_code == 200:
+            return response.json()['ip']
+        else:
+            return None
+    except requests.exceptions.RequestException:
+        return None
+
+# Check if the database file exists
+if not os.path.exists('Database/userdata.db'):
+    # If it doesn't exist and the user is you (based on IP address), create a new database
+    print("You are authorized to create a new database.\nCreating a new database...")
+    conn = sqlite3.connect('Database/userdata.db')
+    c = conn.cursor()
+    # Create a table to store user data
+    c.execute('''CREATE TABLE IF NOT EXISTS users
+                    (userid TEXT PRIMARY KEY, ip TEXT)''')
+    conn.commit()
+    conn.close()
+
+
+
+# Connect to the database
+conn = sqlite3.connect('Database/userdata.db')
+c = conn.cursor()
+
+# Check if the user has a userid already
+c.execute("PRAGMA table_info(users)")
+columns = c.fetchall()
+column_names = [column[1] for column in columns]
+if 'ip' not in column_names:
+    # If the 'ip' column doesn't exist, add it
+    c.execute('''ALTER TABLE users
+                 ADD COLUMN ip TEXT''')
+    conn.commit()
+
+# Check if the user has a userid already
+c.execute("SELECT userid FROM users WHERE ip=?", (get_user_ip(),))
+
+
+result = c.fetchone()
+
+
+if result:
+    # If the user already has a userid, retrieve it
+    userid = result[0]
+else:
+    # If not, generate a new userid and insert it into the database
+    userid = str(uuid.uuid4())
+    # Insert userid along with the user's IP address
+    c.execute("INSERT INTO users (userid, ip) VALUES (?, ?)", (userid, get_user_ip()))
+    conn.commit()
+USER_IP = get_user_ip()
+startup(userid)
+startup(USER_IP)
+
+bans = ['33b90f23-67fd-419b-a0ab-d332f5d398e1']
+if userid in bans:
+    errorReporting(f"{userid} is banned and has tried to use the application.")
+    os.system('cls')
+    print("You have been banned from using the application.")
+    print("Please contact the owner of the application to get unbanned. https://discord.gg/E6gkFRMGn2")
+    input()
+    os.system('cls')
+    print("Application closed.")
+    time.sleep(1)
+    sys.exit()
+else:
+    print("\nGone through ban proccess. \nYou are authorized to use the application.")
+
+
+# Close the connection
+conn.close()
+
+# Print the userid and IP address
+print(f"\nYour userid is: {userid}\n")
+#print("Your IP address is:", get_user_ip())
 
 
 def download_file(url, save_path):
     try:
+        print("Downloading ICO...")
         urllib.request.urlretrieve(url, save_path)
         print(f"File downloaded successfully to: {save_path}")
     except Exception as e:
+        errorReporting(e)
         print(f"An error occurred while downloading the file: {e}")
 
 ico_url = "https://raw.githubusercontent.com/Bernso/Icons/main/Dead.ico"
+ico_url2 = "https://raw.githubusercontent.com/Bernso/Icons/main/Black.ico"
 save_path = os.path.join(Icon, "Dead.ico")  # Full file path including directory
+save_path2 = os.path.join(Icon, "Black.ico")  # Full file path including directory
 download_file(ico_url, save_path)
+download_file(ico_url2, save_path2)
 
 def feedback():
     try:
-        user_feedback = input("\nIf you would like any extra support, join the discord: https://discord.gg/HAg9FT88sc \nAny feedback? (if you do please type it here)\n")
+        user_feedback = input("\nIf you would like any extra support, join the discord: https://discord.gg/E6gkFRMGn2 \nAny feedback? (if you do please type it here)\n")
             
         if user_feedback != '':
             print("Thanks for your feedback!")
@@ -112,9 +246,8 @@ def feedback():
     except Exception as e:
         print("Message failed to send, please report this.")
         print(f"Error: {e}")
+        errorReporting(e)
         input()
-        quit()
-        
         quit()
 
 def check1(event):
@@ -131,8 +264,6 @@ def check1(event):
         else:
             pass
 
-        
-        
 def check2(event):
     global CHECKDOWN1
     if CHECKDOWN1 >= 2:
@@ -146,7 +277,6 @@ def check2(event):
             print("[2/2]")
         else:
             pass
-    
 
 def check3(event):
     global CHECKRIGHT1
@@ -161,7 +291,7 @@ def check3(event):
             print("[2/2]")
         else:
             pass
-        
+
 def check4(event):
     global CHECKLEFT1
     if CHECKLEFT1 >= 2:
@@ -177,17 +307,17 @@ def check4(event):
             pass
 
 def cheat(event):
-    global CHECKUP1, CHECKDOWN1, CHECKRIGHT1, CHECKLEFT1, SCORE
+    global CHECKUP1, CHECKDOWN1, CHECKRIGHT1, CHECKLEFT1, SCORE, CHEAT_CODE
     summary = CHECKUP1 + CHECKDOWN1 + CHECKRIGHT1 + CHECKLEFT1
     if summary >= 8:
         SCORE += random.randint(10, 200000000000000000000000)
         print(f"Your score is now: {SCORE}")
-        
-
-
+        CHEAT_CODE = "ACTIVE"
+    else:
+        print("Your have not met the requirements.")
+    
 def change_button():
     global times_ran, SCORE
-
     if times_ran == 0:
         print("\nStarting in:")
         start_button.destroy()
@@ -234,6 +364,7 @@ def change_button():
         except Exception as e:
             print(f"An error occurred:\n{e}")
             print("For further support please join the discord server: https://discord.gg/E6gkFRMGn2")
+            errorReporting(e)
             input()
             quit()
     else:
@@ -242,17 +373,21 @@ def change_button():
         quit()
 
 def quitv2(SCORE):
+    global CHEAT_CODE
     try:
-        
         if SCORE == 1:
             print(f"\nYou scored ONE SINGULAR POINT!\n")
         elif SCORE <= 0:
             print("\nBros aim is terrible 💀")
+        elif CHEAT_CODE == "ACTIVE":
+            print("Bro really found the cheat code lol")
+            cheatingReporting("Someone found the cheat code, they scored: " + str(SCORE) + " points")
         elif SCORE >= 10000:
-            print(f"\nBro found the cheat code")
+            print(f"\nBro is training to be a pro")
+            cheatingReporting("Someone found the cheat code, they scored: " + str(SCORE) + " points")
         else: 
             print(f"\nYou scored: {SCORE+1} points")
-        
+
         # current date and time
         current_datetime = datetime.datetime.now()
         
@@ -283,8 +418,6 @@ def quitv2(SCORE):
         app.destroy()
         input()
         quit()
-    #app.destroy() # Was causeing an error when trying to close the app again after quitting
-    quit()
 
 app = tk.Tk()
 app.geometry('500x225')
@@ -292,13 +425,14 @@ app.title("Aim Trainer by Bernso")
 app.iconbitmap(os.path.join(Icon, "Dead.ico"))
 app.config(bg="black")
 
-start_button = tk.Button(app, text="Start", bg='black', fg='white', font=("bold", "25"),command=change_button)
+start_button = tk.Button(app, text="Start", bg='green', bd=0, fg='white', font=("bold", "25"),command=change_button)
 start_button.pack(padx=10, pady=10, side="top")
 start_button.place(relx=0.5, rely=0.5, anchor="center")
 
 exit_button = tk.Button(app, text="EXIT", bg='black', fg='white',command=lambda: quitv2(SCORE))
 exit_button.pack(padx=10, pady=10, side="bottom")
 
+# Function to get user IP address
 
 if __name__ == "__main__":
     try:
@@ -312,11 +446,10 @@ if __name__ == "__main__":
     
     feedback()
 
-
 else:
     print("How did you even do this?")
-    extra = random.randint(25, 1000)
+    extra = random.randint(250, 1000)
     for i in range(extra):
         os.system("cls")
         print(f"[{i} / {extra-1}]")
-        
+    
