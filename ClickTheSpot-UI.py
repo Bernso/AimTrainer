@@ -89,6 +89,7 @@ def download_file(url, save_path):
 ico_url = "https://raw.githubusercontent.com/Bernso/Icons/main/Dead.ico"
 save_path = os.path.join(Icon, "Dead.ico")  # Full file path including directory
 download_file(ico_url, save_path)
+
 def feedback():
     try:
         user_feedback = input("\nIf you would like any extra support, join the discord: https://discord.gg/HAg9FT88sc \nAny feedback? (if you do please type it here)\n")
