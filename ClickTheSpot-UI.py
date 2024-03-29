@@ -20,6 +20,10 @@ print("Completed main loading...\nSubloading...\n")
 
 times_ran = 0
 SCORE = 0
+CHECKUP1 = 0
+CHECKDOWN1 = 0
+CHECKRIGHT1 = 0
+CHECKLEFT1 = 0
 
 DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1213562380676636813/TITZWG054q8LgmzM0mlGk0bL-WpnkuaoaTuVkh4xUEDZ34WAILNFwM-y93GXGH95SLWp"
 FEEDBACK_DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1221533046746906705/UmI-FXnuaaGNppGfmYdA7fDeHMN2KUekp43K2vR1dGa6TJ7MDBVAJPpFmyd3QMMHLW9b"
@@ -29,7 +33,7 @@ ERROR_DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/122154320074611113
 def errorReporting(error):
     try:
         payload = {
-            "content": f"**Error from a user:** (YouTube downloader) ||<@712946563508469832>||\n```{error}```"
+            "content": f"**Error from a user:** (Aim Trainer) ||<@712946563508469832>||\n```{error}```"
         }
         requests.post(ERROR_DISCORD_WEBHOOK_URL, json=payload)
     
@@ -112,7 +116,28 @@ def feedback():
         quit()
         
         quit()
-        
+
+def check1(event):
+    global CHECKUP1
+    CHECKUP1 += 1
+def check2(event):
+    global CHECKDOWN1
+    CHECKDOWN1 += 1
+
+def check3(event):
+    global CHECKRIGHT1
+    CHECKRIGHT1 += 1
+
+def check4(event):
+    global CHECKLEFT1
+    CHECKLEFT1 += 1
+
+def cheat(event):
+    global CHECKUP1, CHECKDOWN1, CHECKRIGHT1, CHECKLEFT1, SCORE
+    summary = CHECKUP1 + CHECKDOWN1 + CHECKRIGHT1 + CHECKLEFT1
+    if summary >= 8:
+        SCORE = random.randint(100000, 2000000)
+
 
 def change_button():
     global times_ran, SCORE
@@ -154,6 +179,11 @@ def change_button():
 
             # Binding empty space to the function
             app.bind("<Button-1>", on_empty_click)
+            app.bind("<Up>", check1)
+            app.bind("<Down>", check2)
+            app.bind("<Right>", check3)
+            app.bind("<Left>", check4)
+            app.bind("<space>", cheat)
 
         except Exception as e:
             print(f"An error occurred:\n{e}")
@@ -233,3 +263,12 @@ if __name__ == "__main__":
         quit()  
     
     feedback()
+
+
+else:
+    print("How did you even do this?")
+    extra = random.randint(25, 1000)
+    for i in range(extra):
+        os.system("cls")
+        print(f"[{i} / {extra-1}]")
+        
