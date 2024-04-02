@@ -14,7 +14,7 @@ except ImportError:
     print("For further support please join the discord server: https://discord.gg/E6gkFRMGn2")
     input()
     quit()
-
+sys.set_int_max_str_digits(10000000)
 #a = random.randint(12, 30)
 #print("Starting main loading...\n")
 #for o in range(1, a):
@@ -189,7 +189,7 @@ USER_IP = get_user_ip()
 startup(userid)
 startup(USER_IP)
 
-bans = ['33b90f23-67fd-419b-a0ab-d332f5d398e1']
+bans = ['']
 if userid in bans:
     errorReporting(f"{userid} is banned and has tried to use the application.")
     os.system('cls')
@@ -310,7 +310,7 @@ def cheat(event):
     global CHECKUP1, CHECKDOWN1, CHECKRIGHT1, CHECKLEFT1, SCORE, CHEAT_CODE
     summary = CHECKUP1 + CHECKDOWN1 + CHECKRIGHT1 + CHECKLEFT1
     if summary >= 8:
-        SCORE += random.randint(10, 200000000000000000000000)
+        SCORE *= random.randint(10, 200000000000000000000000)
         print(f"Your score is now: {SCORE}")
         CHEAT_CODE = "ACTIVE"
     else:
