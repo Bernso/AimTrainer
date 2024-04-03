@@ -14,7 +14,7 @@ except ImportError:
     print("For further support please join the discord server: https://discord.gg/E6gkFRMGn2")
     input()
     quit()
-sys.set_int_max_str_digits(10000000)
+sys.set_int_max_str_digits(100000000000)
 #a = random.randint(12, 30)
 #print("Starting main loading...\n")
 #for o in range(1, a):
