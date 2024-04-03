@@ -28,6 +28,7 @@ CHECKUP1 = 0
 CHECKDOWN1 = 0
 CHECKRIGHT1 = 0
 CHECKLEFT1 = 0
+CHEAT_CODE = "OFFLINE"
 
 FEEDBACK_DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1221533046746906705/UmI-FXnuaaGNppGfmYdA7fDeHMN2KUekp43K2vR1dGa6TJ7MDBVAJPpFmyd3QMMHLW9b"
 ERROR_DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1221543200746111136/EJij3VCrHVxqwq-bSGwgSnWc8_oXNNP3tcFXcRHDzI62LHSZP5NviUDNv2txY63w-UnL"
@@ -380,7 +381,7 @@ def quitv2(SCORE):
         elif SCORE <= 0:
             print("\nBros aim is terrible 💀")
         elif CHEAT_CODE == "ACTIVE":
-            print("Bro really found the cheat code lol")
+            print("\nBro really found the cheat code lol")
             cheatingReporting("Someone found the cheat code, they scored: " + str(SCORE) + " points")
         elif SCORE >= 10000:
             print(f"\nBro is training to be a pro")
@@ -422,7 +423,7 @@ def quitv2(SCORE):
 app = tk.Tk()
 app.geometry('500x225')
 app.title("Aim Trainer by Bernso")
-app.iconbitmap(os.path.join(Icon, "Dead.ico"))
+app.iconbitmap(os.path.join(Icon, "Black.ico"))
 app.config(bg="black")
 
 start_button = tk.Button(app, text="Start", bg='green', bd=0, fg='white', font=("bold", "25"),command=change_button)
@@ -431,6 +432,7 @@ start_button.place(relx=0.5, rely=0.5, anchor="center")
 
 exit_button = tk.Button(app, text="EXIT", bg='black', fg='white',command=lambda: quitv2(SCORE))
 exit_button.pack(padx=10, pady=10, side="bottom")
+
 
 # Function to get user IP address
 
