@@ -426,7 +426,7 @@ app.title("Aim Trainer by Bernso")
 app.iconbitmap(os.path.join(Icon, "Black.ico"))
 app.config(bg="black")
 
-start_button = tk.Button(app, text="Start", bg='green', bd=0, fg='white', font=("bold", "25"),command=change_button)
+start_button = tk.Button(app, text="Start", bg='green', bd=0, fg='white', font=("bold", 25),command=change_button)
 start_button.pack(padx=10, pady=10, side="top")
 start_button.place(relx=0.5, rely=0.5, anchor="center")
 
